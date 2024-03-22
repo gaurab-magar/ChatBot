@@ -4,6 +4,8 @@ import { IoMenuSharp } from "react-icons/io5";
 import { CiTimer } from "react-icons/ci";
 import userImg from '../Assets/user.jpg';
 import { AiOutlineSend } from "react-icons/ai";
+import { CiUser } from "react-icons/ci";
+import { BsRobot } from "react-icons/bs";
 
 
 export const Home = () => {
@@ -58,6 +60,24 @@ export const Home = () => {
         }
 
     ]
+    const NewChat = [
+        {
+            role:'user',
+            message:'I want to use tailwindcss'
+        },
+        {
+            role:'assistant',
+            message:'Yes in which part i can assists you '
+        },
+        {
+            role:'user',
+            message:'show me some sample codes'
+        },
+        {
+            role:'assistant',
+            message:'Here are some an example'
+        },
+    ]
   return (
     <main>
         <div className='container-fluid'>
@@ -96,20 +116,51 @@ export const Home = () => {
                             </div>
                             <h4 className='fw-bold my-4 text-center'>How can i help you today?</h4>
                             <div className='row'>
-                                <div className='col-md-6'>
-                                    <p className='border border-3 rounded-3 p-2 text-muted default-prompt'>How to use Prompts</p>
-                                </div>
-                                <div className='col-md-6'>
-                                    <p className='border border-3 rounded-3 p-2 text-muted default-prompt'>How to use Prompts</p>
-                                </div>
-                            </div>
-                            <div className='row'>
-                                <div className='col-md-6'>
-                                    <p className='border border-3 rounded-3 p-2 text-muted default-prompt'>How to use Prompts</p>
-                                </div>
-                                <div className='col-md-6'>
-                                    <p className='border border-3 rounded-3 p-2 text-muted default-prompt'>How to use Prompts</p>
-                                </div>
+                                {
+                                    NewChat.length > 0 ? 
+                                        
+                                            <>
+                                                <div>
+                                                    {NewChat.map((item,index)=>(
+                                                        <>
+                                                            <span>
+                                                                {item.role === 'user'?
+                                                                    <div className='d-flex align-items-center gap-3 p-3'>
+                                                                        <CiUser />
+                                                                        <p className='mb-0'>{item.message}<br/></p>
+                                                                    </div> 
+                                                                :""}    
+                                                            </span>
+                                                            <span>
+                                                                {item.role === 'assistant'?
+                                                                    <div className='d-flex align-items-center gap-3 bg-dark text-success p-3'>
+                                                                        <BsRobot className='text-info' />
+                                                                        <p className='mb-0'>{item.message}<br/></p>
+                                                                    </div>:''}  
+                                                            </span>
+                                                        </>
+                                                    ))}
+                                                </div>
+                                            </>
+                                        :
+                                        
+                                            <>
+                                                <div className='col-md-6'>
+                                                    <p className='border border-3 rounded-3 p-2 text-muted default-prompt'>How to use Prompts</p>
+                                                </div>
+                                                <div className='col-md-6'>
+                                                    <p className='border border-3 rounded-3 p-2 text-muted default-prompt'>How to use Prompts</p>
+                                                </div>
+                                                <div className='col-md-6'>
+                                                    <p className='border border-3 rounded-3 p-2 text-muted default-prompt'>How to use Prompts</p>
+                                                </div>
+                                                <div className='col-md-6'>
+                                                    <p className='border border-3 rounded-3 p-2 text-muted default-prompt'>How to use Prompts</p>
+                                                </div>
+                                            </>
+                                    
+                                    }
+                                
                             </div>
                         </div>
                     </section>
