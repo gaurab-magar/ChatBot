@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{useState} from 'react';
 import { IoChatbubbleEllipsesSharp } from "react-icons/io5";
 import { IoMenuSharp } from "react-icons/io5";
 import { CiTimer } from "react-icons/ci";
@@ -9,6 +9,38 @@ import { BsRobot } from "react-icons/bs";
 
 
 export const Home = () => {
+
+    const [newChat , setNewChat] = useState([]);
+    const [input , setInput] = useState('');
+
+    const handledata = async () => {
+        if (input.trim()) {
+            setNewChat([...newChat, { role: 'user', content: input }]);
+
+            const response = await fetch('https://api.openai.com/v1/chat/completions', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    messages: [
+                        ...newChat,
+                        {
+                            role: 'user',
+                            content: input
+                        }
+                    ]
+                })
+            });
+            // Handle response here
+            const resdata = await response.json();
+            setNewChat(...newChat , {
+                role:'assistant',
+                content : resdata?.choices[0]?.message
+            })
+        }
+    }
+
     const history = [
         {
             title:'First Message',  
@@ -60,6 +92,22 @@ export const Home = () => {
         }
 
     ]
+
+    const defaultContent = [
+        {
+            content: 'How to prompts'
+        },
+        {
+            content:'How to use bootstrap'
+        },
+        {
+            content:'How to integerate API and ChatGpt'
+        },
+        {
+            content:'How to create card in react'
+        }
+    ]
+
     const NewChat = [
         {
             role:'user',
@@ -117,7 +165,7 @@ export const Home = () => {
                             <h4 className='fw-bold my-4 text-center'>How can i help you today?</h4>
                             <div className='row'>
                                 {
-                                    NewChat.length > 0 ? 
+                                    NewChat.length < 0 ? 
                                         
                                             <>
                                                 <div>
@@ -145,20 +193,12 @@ export const Home = () => {
                                         :
                                         
                                             <>
-                                                <div className='col-md-6'>
-                                                    <p className='border border-3 rounded-3 p-2 text-muted default-prompt'>How to use Prompts</p>
+                                            {defaultContent.slice(0,4).map((item, index) => (
+                                                <div key={index} className='col-md-6'>
+                                                    <p onClick={()=>setInput(item.content)} className='border border-3 rounded-3 p-2 text-muted default-prompt'>{item.content}</p>
                                                 </div>
-                                                <div className='col-md-6'>
-                                                    <p className='border border-3 rounded-3 p-2 text-muted default-prompt'>How to use Prompts</p>
-                                                </div>
-                                                <div className='col-md-6'>
-                                                    <p className='border border-3 rounded-3 p-2 text-muted default-prompt'>How to use Prompts</p>
-                                                </div>
-                                                <div className='col-md-6'>
-                                                    <p className='border border-3 rounded-3 p-2 text-muted default-prompt'>How to use Prompts</p>
-                                                </div>
+                                            ))}
                                             </>
-                                    
                                     }
                                 
                             </div>
@@ -166,8 +206,8 @@ export const Home = () => {
                     </section>
                     <div className='d-flex flex-column align-items-center mt-3'>
                         <form className='w-100 input-group'>
-                            <input className='form-control p-3' type='text' placeholder='Ask Gaurab Anything...'></input>
-                            <button className='btn btn-secondary px-3 py-2'>
+                            <input onChange={(e)=>setInput(e.target.value)} value={input} className='form-control p-3' type='text' placeholder='Ask Gaurab Anything...'></input>
+                            <button onClick={()=> input.trim()? handledata(): undefined} className='btn btn-secondary px-3 py-2'>
                                 <AiOutlineSend/>
                             </button>
                         </form>
